@@ -1,6 +1,6 @@
 // Service worker : met l'appli en cache pour qu'elle fonctionne hors ligne.
-// Changer CACHE (v1 -> v2...) à chaque modification des fichiers pour forcer la mise à jour.
-const CACHE = 'subnet-v2';
+// Changer CACHE (v3 -> v4...) quand la liste FILES change ; les mises à jour du contenu arrivent seules.
+const CACHE = 'subnet-v3';
 const FILES = [
   './',
   'index.html',
@@ -15,7 +15,10 @@ const FILES = [
 ];
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES)));
+  // cache: 'reload' : on contourne le cache HTTP du navigateur (GitHub Pages le garde
+  // 10 min), sinon on risquerait de stocker l'ancienne version sous le nouveau nom.
+  e.waitUntil(caches.open(CACHE).then((c) =>
+    c.addAll(FILES.map((f) => new Request(f, { cache: 'reload' })))));
   self.skipWaiting();
 });
 
@@ -28,8 +31,19 @@ self.addEventListener('activate', (e) => {
   self.clients.claim();
 });
 
-// Stratégie "cache d'abord, réseau ensuite"
+// Stratégie "réseau d'abord, cache en secours" : en ligne on a toujours la dernière
+// version (et le cache est rafraîchi au passage) ; hors ligne on sert le cache.
 self.addEventListener('fetch', (e) => {
-  if (e.request.method !== 'GET') return;
-  e.respondWith(caches.match(e.request).then((hit) => hit || fetch(e.request)));
+  if (e.request.method !== 'GET' || !e.request.url.startsWith(self.location.origin)) return;
+  e.respondWith(
+    fetch(e.request, { cache: 'no-cache' })
+      .then((res) => {
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(e.request, copy));
+        }
+        return res;
+      })
+      .catch(() => caches.match(e.request, { ignoreSearch: true }))
+  );
 });
