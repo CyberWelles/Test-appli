@@ -126,4 +126,4 @@ if ('serviceWorker' in navigator) {
 }
 
 // Exposé pour les tests éventuels
-window.subnet = { parseIp, parseMask, compute, toIp };
+window.subnet = { parseIp, parseMask, compute, toIp, cidrToMask };

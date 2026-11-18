@@ -14,9 +14,14 @@
 <body>
   <header>
     <h1>Calcul Sous-Réseau IPv4</h1>
+    <nav class="tabs" role="tablist" aria-label="Outils">
+      <button type="button" role="tab" id="tab-calc" aria-controls="panel-calc" aria-selected="true">Calcul</button>
+      <button type="button" role="tab" id="tab-plan" aria-controls="panel-plan" aria-selected="false" tabindex="-1">Plan d'adressage</button>
+    </nav>
   </header>
 
   <main>
+   <section id="panel-calc" role="tabpanel" aria-labelledby="tab-calc">
     <form id="form" autocomplete="off" novalidate>
       <label for="ip">Adresse IP</label>
       <input id="ip" name="ip" type="text" inputmode="decimal"
@@ -50,8 +55,45 @@
       <div class="row hl"><span>Nombre d'hôtes</span><output id="r-hosts"></output></div>
       <p id="note" class="note" hidden></p>
     </section>
+   </section>
+
+   <section id="panel-plan" role="tabpanel" aria-labelledby="tab-plan" hidden>
+    <form id="plan-form" autocomplete="off" novalidate>
+      <label for="block">Bloc réseau (CIDR)</label>
+      <input id="block" type="text" inputmode="decimal"
+             placeholder="192.168.10.0/24" spellcheck="false" autocapitalize="off">
+
+      <div class="vlan-head" aria-hidden="true">
+        <span>Nom du VLAN</span><span>Hôtes</span><span></span>
+      </div>
+      <div id="vlans"></div>
+      <button type="button" id="add-vlan" class="btn-secondary">+ Ajouter un VLAN</button>
+
+      <label class="check">
+        <input type="checkbox" id="gw-extra" checked>
+        La passerelle s'ajoute au nombre d'hôtes
+      </label>
+
+      <p id="plan-error" class="error" role="alert" hidden></p>
+    </form>
+
+    <div id="plan-results" aria-live="polite" hidden>
+      <p id="plan-warning" class="warning" role="alert" hidden></p>
+      <div id="plan-summary" class="summary"></div>
+      <div id="plan-list"></div>
+    </div>
+   </section>
   </main>
 
+  <template id="vlan-row">
+    <div class="vlan-row">
+      <input class="vlan-name" type="text" placeholder="Nom" aria-label="Nom du VLAN" spellcheck="false">
+      <input class="vlan-hosts" type="text" inputmode="numeric" placeholder="0" aria-label="Nombre d'hôtes">
+      <button type="button" class="vlan-del" aria-label="Supprimer ce VLAN">×</button>
+    </div>
+  </template>
+
   <script src="app.js"></script>
+  <script src="vlsm.js"></script>
 </body>
 </html>
