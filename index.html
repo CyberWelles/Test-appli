@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Calcul Sous-Réseau</title>
+  <meta name="description" content="Calculateur de sous-réseaux IPv4 : adresse réseau, broadcast, plage d'hôtes.">
+  <meta name="theme-color" content="#1565c0">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Calcul Sous-Réseau IPv4</h1>
+  </header>
+
+  <main>
+    <form id="form" autocomplete="off" novalidate>
+      <label for="ip">Adresse IP</label>
+      <input id="ip" name="ip" type="text" inputmode="decimal"
+             placeholder="192.168.1.10" spellcheck="false" autocapitalize="off">
+
+      <label for="mask">Masque (CIDR ou décimal)</label>
+      <input id="mask" name="mask" type="text" inputmode="decimal"
+             placeholder="24  ou  255.255.255.0" spellcheck="false" autocapitalize="off">
+
+      <div class="presets" aria-label="Masques courants">
+        <button type="button" data-cidr="8">/8</button>
+        <button type="button" data-cidr="16">/16</button>
+        <button type="button" data-cidr="24">/24</button>
+        <button type="button" data-cidr="25">/25</button>
+        <button type="button" data-cidr="26">/26</button>
+        <button type="button" data-cidr="27">/27</button>
+        <button type="button" data-cidr="28">/28</button>
+        <button type="button" data-cidr="30">/30</button>
+      </div>
+
+      <p id="error" class="error" role="alert" hidden></p>
+    </form>
+
+    <section id="results" class="results" aria-live="polite" hidden>
+      <div class="row"><span>Masque</span><output id="r-mask"></output></div>
+      <div class="row"><span>Wildcard</span><output id="r-wildcard"></output></div>
+      <div class="row hl"><span>Adresse réseau</span><output id="r-network"></output></div>
+      <div class="row hl"><span>Broadcast</span><output id="r-broadcast"></output></div>
+      <div class="row"><span>1ʳᵉ adresse utilisable</span><output id="r-first"></output></div>
+      <div class="row"><span>Dernière adresse utilisable</span><output id="r-last"></output></div>
+      <div class="row hl"><span>Nombre d'hôtes</span><output id="r-hosts"></output></div>
+      <p id="note" class="note" hidden></p>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
