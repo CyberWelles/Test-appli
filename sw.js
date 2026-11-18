@@ -1,11 +1,12 @@
 // Service worker : met l'appli en cache pour qu'elle fonctionne hors ligne.
 // Changer CACHE (v1 -> v2...) à chaque modification des fichiers pour forcer la mise à jour.
-const CACHE = 'subnet-v1';
+const CACHE = 'subnet-v2';
 const FILES = [
   './',
   'index.html',
   'style.css',
   'app.js',
+  'vlsm.js',
   'manifest.webmanifest',
   'icons/icon.svg',
   'icons/icon-192.png',
